@@ -8,7 +8,7 @@ import joblib
 data = pd.read_csv(r"C:\Users\DELL\Downloads\ML_STream_lit\ML_STream_lit\Data\D_Ecommerce.csv")
 
 
-features = ['Brand', 'MRP', 'RAM', 'ROM', 'Display_Size', 'Battery', 'Front_Cam(MP)', 'Back_Cam(MP)']
+features = ['Brand', 'Brand_Model', 'RAM', 'ROM', 'Display_Size', 'Battery', 'Front_Cam(MP)', 'Back_Cam(MP)']
 X = data[features]
 y = data['Discount_Price']
 
@@ -24,6 +24,7 @@ model.fit(X_train, y_train)
 
 
 joblib.dump(model, 'best_fit_model.pkl')
+
 
 
 
