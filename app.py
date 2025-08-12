@@ -6,7 +6,7 @@ import joblib
 model = joblib.load("best_fit_model.pkl")
 
 # Features for prediction
-features = ['Brand', 'RAM', 'ROM', 'Display_Size', 'Battery', 'Front_Cam(MP)', 'Back_Cam(MP)']
+features = ['RAM', 'ROM', 'Display_Size', 'Battery', 'Front_Cam(MP)', 'Back_Cam(MP)']
 
 # App Title
 st.set_page_config(page_title="E-Commerce Smartphone Price Predictor", layout="wide")
@@ -64,5 +64,6 @@ elif choice == "About":
     - **Dataset:** Scraped from Amazon & Flipkart mobile listings  
     - **Goal:** Help users and sellers estimate the selling price of smartphones based on specifications.  
     """)
+
 
 
