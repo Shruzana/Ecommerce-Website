@@ -5,7 +5,7 @@ from sklearn.linear_model import LinearRegression
 import joblib
 
 
-data = pd.read_csv(r"C:\Users\user\OneDrive\Desktop\ML_STream_lit\Data\D_Ecommerce.csv")
+data = pd.read_csv(r"C:\Users\DELL\Downloads\ML_STream_lit\ML_STream_lit\Data\D_Ecommerce.csv")
 
 
 features = ['Brand', 'MRP', 'RAM', 'ROM', 'Display_Size', 'Battery', 'Front_Cam(MP)', 'Back_Cam(MP)']
@@ -24,5 +24,6 @@ model.fit(X_train, y_train)
 
 
 joblib.dump(model, 'best_fit_model.pkl')
+
 
 
