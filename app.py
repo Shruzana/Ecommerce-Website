@@ -1,42 +1,64 @@
-import streamlit as st
-import pandas as pd
 import joblib
+import pandas as pd
 
-# Load the model and scaler
-model = joblib.load("best_fit_model.pkl")  # Trained model
-scaler = joblib.load("scaler.pkl")  # Scaler used during training
+# Load model
+model = joblib.load('best_fit_model.pkl')
 
-# Features list (must be same as in train.py)
-FEATURES = ['Brand', 'MRP', 'RAM', 'ROM', 'Display_Size', 'Battery', 'Front_Cam(MP)', 'Back_Cam(MP)']
+# Features for prediction
+features = ['Brand', 'Brand_Model', 'RAM', 'ROM', 'Display_Size', 'Battery', 'Front_Cam(MP)', 'Back_Cam(MP)']
 
-st.title("📱 E-Commerce Smartphone Price Predictor")
+# Sidebar Navigation
+st.sidebar.title("📌 Navigation")
+page = st.sidebar.radio("Go to", ["🏠 Home", "📊 Prediction"])
 
-# User inputs
-brand = st.selectbox("Select Brand", ["Samsung", "Apple", "Xiaomi", "OnePlus", "Realme", "Oppo", "Vivo", "Other"])
-mrp = st.number_input("Enter MRP", min_value=0.0, step=1.0)
-ram = st.number_input("Enter RAM (GB)", min_value=0.0, step=1.0)
-rom = st.number_input("Enter ROM (GB)", min_value=0.0, step=1.0)
-display_size = st.number_input("Enter Display Size (inches)", min_value=0.0, step=0.1)
-battery = st.number_input("Enter Battery Capacity (mAh)", min_value=0.0, step=100.0)
-front_cam = st.number_input("Enter Front Camera (MP)", min_value=0.0, step=1.0)
-back_cam = st.number_input("Enter Back Camera (MP)", min_value=0.0, step=1.0)
+# ================= HOME PAGE =================
+if page == "🏠 Home":
+    st.title("📱 E-Commerce Smartphone Price Predictor")
+    st.image("https://cdn.pixabay.com/photo/2017/01/06/19/15/smartphone-1957740_960_720.jpg", use_container_width=True)
 
-if st.button("Predict Price"):
-    # Convert brand to numeric encoding (same encoding as training)
-    brand_mapping = {
-        "Samsung": 0, "Apple": 1, "Xiaomi": 2, "OnePlus": 3,
-        "Realme": 4, "Oppo": 5, "Vivo": 6, "Other": 7
-    }
-    brand_val = brand_mapping.get(brand, 7)
+    st.markdown("""
+    ## 📌 Project Overview
+    This project predicts the selling price of smartphones using features like **Brand**, **RAM**, **ROM**, **Display Size**, and **Camera Quality**.  
+    The model was trained on an e-commerce dataset to help sellers estimate competitive prices.
 
-    # Create dataframe with exact same columns
-    input_data = pd.DataFrame([[brand_val, mrp, ram, rom, display_size, battery, front_cam, back_cam]],
-                              columns=FEATURES)
+    ### 🔍 Features Used:
+    - **Brand**: Company of the smartphone (e.g., Samsung, Apple, Redmi, OnePlus, etc.)
+    - **MRP**: Maximum Retail Price.
+    - **RAM**: Memory in GB.
+    - **ROM**: Storage capacity in GB.
+    - **Display Size**: Screen size in inches.
+    - **Battery**: Battery capacity in mAh.
+    - **Front Camera (MP)**: Front camera resolution.
+    - **Back Camera (MP)**: Rear camera resolution.
+    """)
 
-    # Apply same scaler
-    input_scaled = scaler.transform(input_data)
+    st.info("💡 Use the **Prediction** tab in the sidebar to test the model!")
 
-    # Predict
-    prediction = model.predict(input_scaled)[0]
+# ================= PREDICTION PAGE =================
+elif page == "📊 Prediction":
+    st.title("📊 Predict Smartphone Selling Price")
 
-    st.success(f"💰 Predicted Selling Price: ₹{prediction:,.2f}")
+    # Input fields
+    input_features = {}
+
+    # Brand dropdown
+    brands = ['Samsung', 'Apple', 'Redmi', 'OnePlus', 'Realme', 'Vivo', 'Oppo', 'Motorola', 'Poco', 'Others']
+    input_features['Brand'] = st.selectbox("Select Brand", brands)
+
+    # Numeric inputs
+    for feat in features[1:]:  # Skip 'Brand'
+        input_features[feat] = st.number_input(f"Enter {feat}", value=0.0)
+
+    if st.button("🚀 Predict Price"):
+        df = pd.DataFrame([input_features])
+        pred = model.predict(df)
+        st.success(f"💰 Predicted Selling Price: ₹{pred[0]:,.2f}")
+
+    if st.button("📈 Show Model Coefficients"):
+        if hasattr(model, "coef_"):
+            coef_dict = dict(zip(features, model.coef_))
+            st.write("Model Coefficients:")
+            st.json(coef_dict)
+            st.write(f"Intercept: {model.intercept_:.2f}")
+        else:
+            st.warning("This model does not have coefficients (e.g., tree-based models).")
