@@ -51,8 +51,8 @@ elif choice == "Prediction":
         input_features[feat] = st.number_input(f"Enter {feat}", min_value=0.0, step=0.1)
 
     if st.button("Predict Price"):
-        df = pd.DataFrame([input_features])
-        pred = model.predict(df)
+        data = pd.DataFrame([input_features])
+        pred = model.predict(data)
         st.success(f"💰 Predicted Selling Price: ₹{pred[0]:,.2f}")
 
 # ABOUT PAGE
@@ -64,4 +64,5 @@ elif choice == "About":
     - **Dataset:** Scraped from Amazon & Flipkart mobile listings  
     - **Goal:** Help users and sellers estimate the selling price of smartphones based on specifications.  
     """)
+
 
