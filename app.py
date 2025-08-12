@@ -3,67 +3,32 @@ import pandas as pd
 import joblib
 
 # Load model
-model = joblib.load("best_fit_model.pkl")
+model = joblib.load("Pickles/knn.pkl")   # Change path if needed
+scaler = joblib.load("Pickles/sc.pkl")   # If you used scaling in training
 
-# Features for prediction
-features = ['RAM', 'ROM', 'Display_Size', 'Battery', 'Front_Cam(MP)', 'Back_Cam(MP)']
+st.title("📱 E-Commerce Smartphone Price Predictor")
 
-# App Title
-st.set_page_config(page_title="E-Commerce Smartphone Price Predictor", layout="wide")
+# Take inputs
+mrp = st.number_input("Enter MRP", min_value=0.0, step=0.01)
+discount_price = st.number_input("Enter Discount_Price", min_value=0.0, step=0.01)
+discount = st.number_input("Enter Discount (%)", min_value=0.0, step=0.01)
+ram = st.number_input("Enter RAM (GB)", min_value=0.0, step=0.01)
+rom = st.number_input("Enter ROM (GB)", min_value=0.0, step=0.01)
+display_size = st.number_input("Enter Display Size (inches)", min_value=0.0, step=0.01)
+battery = st.number_input("Enter Battery (mAh)", min_value=0.0, step=0.01)
+front_cam = st.number_input("Enter Front Camera (MP)", min_value=0.0, step=0.01)
+back_cam = st.number_input("Enter Back Camera (MP)", min_value=0.0, step=0.01)
 
-# Sidebar Navigation
-menu = ["Home", "Prediction", "About"]
-choice = st.sidebar.selectbox("Navigation", menu)
+# Prepare input data exactly as in training
+input_data = pd.DataFrame(
+    [[mrp, discount_price, discount, ram, rom, display_size, battery, front_cam, back_cam]],
+    columns=['MRP', 'Discount_Price', 'Discount', 'RAM', 'ROM', 'Display_Size', 'Battery', 'Front_Cam(MP)', 'Back_Cam(MP)']
+)
 
-# HOME PAGE
-if choice == "Home":
-    st.title("📱 E-Commerce Smartphone Price Predictor")
-    st.image("https://cdn.pixabay.com/photo/2014/04/03/10/32/mobile-phone-311797_1280.png", use_container_width=True)
+# Apply scaling (if used in training)
+input_scaled = scaler.transform(input_data)
 
-    st.markdown("""
-    ### Project Overview  
-    This app predicts the **selling price** of smartphones based on specifications like RAM, ROM, Display Size, Camera, and more.  
-    The prediction is powered by a machine learning model trained on real e-commerce data from Amazon and Flipkart.  
-
-    **Features used for prediction**:
-    - Brand
-    - MRP (Maximum Retail Price)
-    - RAM (GB)
-    - ROM / Storage (GB)
-    - Display Size (inches)
-    - Battery (mAh)
-    - Front Camera (MP)
-    - Back Camera (MP)
-    """)
-
-# PREDICTION PAGE
-elif choice == "Prediction":
-    st.title("🔮 Smartphone Price Prediction")
-
-    input_features = {}
-
-    # Dropdown for Brand
-    brand_list = ['Samsung', 'Apple', 'Xiaomi', 'Realme', 'Oppo', 'Vivo', 'OnePlus', 'Other']
-    input_features['Brand'] = st.selectbox("Select Brand", brand_list)
-
-    # Numeric inputs
-    for feat in features[1:]:  # Skip Brand as it's already taken
-        input_features[feat] = st.number_input(f"Enter {feat}", min_value=0.0, step=0.1)
-
-    if st.button("Predict Price"):
-        data = pd.DataFrame([input_features])
-        pred = model.predict(data)
-        st.success(f"💰 Predicted Selling Price: ₹{pred[0]:,.2f}")
-
-# ABOUT PAGE
-elif choice == "About":
-    st.title("ℹ️ About this Project")
-    st.write("""
-    - **Developer:** Your Name  
-    - **Model:** Trained using Lasso Regression  
-    - **Dataset:** Scraped from Amazon & Flipkart mobile listings  
-    - **Goal:** Help users and sellers estimate the selling price of smartphones based on specifications.  
-    """)
-
-
-
+# Predict
+if st.button("Predict Price"):
+    prediction = model.predict(input_scaled)
+    st.success(f"📌 Predicted Value: {prediction[0]:.2f}")
