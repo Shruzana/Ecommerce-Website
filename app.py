@@ -23,4 +23,5 @@ if st.button('Show Model Terms (Coefficients)'):
     coef_dict = dict(zip(features, model.coef_))
     st.write('Model Coefficients:')
     st.json(coef_dict)
-    st.write(f"Intercept: {model.intercept_:.2f}"
+    st.write(f"Intercept: {model.intercept_:.2f}")
+
