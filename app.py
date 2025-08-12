@@ -1,64 +1,66 @@
-import joblib
+import streamlit as st
 import pandas as pd
+import joblib
 
 # Load model
-model = joblib.load('best_fit_model.pkl')
+model = joblib.load("best_fit_model.pkl")
 
 # Features for prediction
-features = ['Brand', 'Brand_Model', 'RAM', 'ROM', 'Display_Size', 'Battery', 'Front_Cam(MP)', 'Back_Cam(MP)']
+features = ['Brand', 'MRP', 'RAM', 'ROM', 'Display_Size', 'Battery', 'Front_Cam(MP)', 'Back_Cam(MP)']
+
+# App Title
+st.set_page_config(page_title="E-Commerce Smartphone Price Predictor", layout="wide")
 
 # Sidebar Navigation
-st.sidebar.title("📌 Navigation")
-page = st.sidebar.radio("Go to", ["🏠 Home", "📊 Prediction"])
+menu = ["Home", "Prediction", "About"]
+choice = st.sidebar.selectbox("Navigation", menu)
 
-# ================= HOME PAGE =================
-if page == "🏠 Home":
+# HOME PAGE
+if choice == "Home":
     st.title("📱 E-Commerce Smartphone Price Predictor")
-    st.image("https://cdn.pixabay.com/photo/2017/01/06/19/15/smartphone-1957740_960_720.jpg", use_container_width=True)
+    st.image("https://cdn.pixabay.com/photo/2014/04/03/10/32/mobile-phone-311797_1280.png", use_container_width=True)
 
     st.markdown("""
-    ## 📌 Project Overview
-    This project predicts the selling price of smartphones using features like **Brand**, **RAM**, **ROM**, **Display Size**, and **Camera Quality**.  
-    The model was trained on an e-commerce dataset to help sellers estimate competitive prices.
+    ### Project Overview  
+    This app predicts the **selling price** of smartphones based on specifications like RAM, ROM, Display Size, Camera, and more.  
+    The prediction is powered by a machine learning model trained on real e-commerce data from Amazon and Flipkart.  
 
-    ### 🔍 Features Used:
-    - **Brand**: Company of the smartphone (e.g., Samsung, Apple, Redmi, OnePlus, etc.)
-    - **MRP**: Maximum Retail Price.
-    - **RAM**: Memory in GB.
-    - **ROM**: Storage capacity in GB.
-    - **Display Size**: Screen size in inches.
-    - **Battery**: Battery capacity in mAh.
-    - **Front Camera (MP)**: Front camera resolution.
-    - **Back Camera (MP)**: Rear camera resolution.
+    **Features used for prediction**:
+    - Brand
+    - MRP (Maximum Retail Price)
+    - RAM (GB)
+    - ROM / Storage (GB)
+    - Display Size (inches)
+    - Battery (mAh)
+    - Front Camera (MP)
+    - Back Camera (MP)
     """)
 
-    st.info("💡 Use the **Prediction** tab in the sidebar to test the model!")
+# PREDICTION PAGE
+elif choice == "Prediction":
+    st.title("🔮 Smartphone Price Prediction")
 
-# ================= PREDICTION PAGE =================
-elif page == "📊 Prediction":
-    st.title("📊 Predict Smartphone Selling Price")
-
-    # Input fields
     input_features = {}
 
-    # Brand dropdown
-    brands = ['Samsung', 'Apple', 'Redmi', 'OnePlus', 'Realme', 'Vivo', 'Oppo', 'Motorola', 'Poco', 'Others']
-    input_features['Brand'] = st.selectbox("Select Brand", brands)
+    # Dropdown for Brand
+    brand_list = ['Samsung', 'Apple', 'Xiaomi', 'Realme', 'Oppo', 'Vivo', 'OnePlus', 'Other']
+    input_features['Brand'] = st.selectbox("Select Brand", brand_list)
 
     # Numeric inputs
-    for feat in features[1:]:  # Skip 'Brand'
-        input_features[feat] = st.number_input(f"Enter {feat}", value=0.0)
+    for feat in features[1:]:  # Skip Brand as it's already taken
+        input_features[feat] = st.number_input(f"Enter {feat}", min_value=0.0, step=0.1)
 
-    if st.button("🚀 Predict Price"):
+    if st.button("Predict Price"):
         df = pd.DataFrame([input_features])
         pred = model.predict(df)
         st.success(f"💰 Predicted Selling Price: ₹{pred[0]:,.2f}")
 
-    if st.button("📈 Show Model Coefficients"):
-        if hasattr(model, "coef_"):
-            coef_dict = dict(zip(features, model.coef_))
-            st.write("Model Coefficients:")
-            st.json(coef_dict)
-            st.write(f"Intercept: {model.intercept_:.2f}")
-        else:
-            st.warning("This model does not have coefficients (e.g., tree-based models).")
+# ABOUT PAGE
+elif choice == "About":
+    st.title("ℹ️ About this Project")
+    st.write("""
+    - **Developer:** Your Name  
+    - **Model:** Trained using Lasso Regression  
+    - **Dataset:** Scraped from Amazon & Flipkart mobile listings  
+    - **Goal:** Help users and sellers estimate the selling price of smartphones based on specifications.  
+    """)
