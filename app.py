@@ -10,34 +10,71 @@ features = ['Brand', 'RAM', 'ROM', 'Display_Size', 'Battery', 'Front_Cam(MP)', '
 
 # Sidebar Navigation
 st.sidebar.title("📌 Navigation")
-page = st.sidebar.radio("Go to", ["🏠 Home", "📊 Prediction"])
+page = st.sidebar.radio("Go to", ["🏠 Home", "ℹ️ Overview", "📊 Prediction"])
 
+# ========================
 # HOME PAGE
+# ========================
 if page == "🏠 Home":
-    st.title("📱 E-Commerce Smartphone Price Predictor")
-    st.image("https://cdn.pixabay.com/photo/2017/01/06/19/15/smartphone-1957740_960_720.jpg", use_container_width=True)
+    st.title("📱 E-Commerce Smartphone Discount Predictor")
+    st.image(
+        "https://cdn.pixabay.com/photo/2021/01/08/09/24/smartphone-5899905_1280.jpg",
+        use_container_width=True
+    )
 
     st.markdown("""
-    ## 📌 Project Overview
-    Predict smartphone selling price based on brand, specifications, and camera quality.
+    ## Welcome to the Smartphone Discount Prediction App 📊
+    This app helps you **predict the discount price** of smartphones
+    based on their brand, RAM, storage, display size, battery, and camera details.
 
-    **Features:**
-    - Brand
-    - RAM
-    - ROM
-    - Display Size
-    - Battery
-    - Front Camera (MP)
-    - Back Camera (MP)
+    **💡 Why use this app?**
+    - Helps e-commerce sellers plan competitive discounts.
+    - Assists customers in estimating the best deal.
+    - Useful for data analysis & price trend insights.
+
+    Navigate to the **Prediction** tab from the sidebar to try it yourself!
     """)
 
-    st.info("💡 Go to the **Prediction** tab from the sidebar to try it!")
+# ========================
+# OVERVIEW PAGE
+# ========================
+elif page == "ℹ️ Overview":
+    st.title("📖 Project Overview")
+    st.markdown("""
+    ### 📌 Objective
+    Predict the **Discount Price** of smartphones using machine learning.
 
+    ### 📊 Dataset
+    The model was trained on data scraped from:
+    - **Amazon** 📦
+    - **Flipkart** 🛒
+
+    ### 📐 Features Used
+    - **Brand** 🏷️
+    - **RAM** (GB) 💾
+    - **ROM** (GB) 📂
+    - **Display Size** (inches) 📱
+    - **Battery** (mAh) 🔋
+    - **Front Camera (MP)** 🤳
+    - **Back Camera (MP)** 📷
+
+    ### ⚙️ How It Works
+    1. Enter smartphone specifications.
+    2. The app processes the input to match training data format.
+    3. The model predicts the **discount price**.
+
+    ### 📈 Use Cases
+    - Price strategy planning for e-commerce platforms.
+    - Budget estimation for buyers.
+    - Competitive market analysis.
+    """)
+
+# ========================
 # PREDICTION PAGE
+# ========================
 elif page == "📊 Prediction":
-    st.title("📊 Predict Smartphone Selling Price")
+    st.title("📊 Predict Smartphone Discount Price")
 
-    # Input dictionary
     input_features = {}
 
     # Brand dropdown
@@ -53,20 +90,21 @@ elif page == "📊 Prediction":
     input_features['Back_Cam(MP)'] = st.number_input("Enter Back Camera (MP)", min_value=0.0)
 
     # Predict Button
-    if st.button("🚀 Predict Price"):
+    if st.button("🚀 Predict Discount Price"):
         df = pd.DataFrame([input_features])
 
-        # One-hot encode Brand if needed
+        # Encoding Brand if required
         if 'Brand' in features:
             df = pd.get_dummies(df, columns=['Brand'])
-            # Ensure all expected brand columns exist (in case user selects a brand not in training data)
             for col in [c for c in features if c.startswith('Brand_')]:
                 if col not in df:
                     df[col] = 0
 
-        # Reorder columns to match model training
+        # Reorder columns to match training features
         df = df.reindex(columns=features, fill_value=0)
 
         # Prediction
         prediction = model.predict(df)[0]
-        st.success(f"💰 Predicted Selling Price: ₹{prediction:,.2f}")
+        st.success(f"💰 Predicted Discount Price: ₹{prediction:,.2f}")
+
+
