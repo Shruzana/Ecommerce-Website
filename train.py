@@ -8,9 +8,9 @@ import joblib
 data = pd.read_csv(r"C:\Users\user\OneDrive\Desktop\ML_STream_lit\Data\D_Ecommerce.csv")
 
 
-features = ['MRP', 'Discount_Price', 'Discount', 'RAM', 'ROM', 'Display_Size', 'Battery', 'Front_Cam(MP)', 'Back_Cam(MP)']
+features = ['Brand', 'MRP', 'Discount_Price', 'RAM', 'ROM', 'Display_Size', 'Battery', 'Front_Cam(MP)', 'Back_Cam(MP)']
 X = data[features]
-y = data['Selling_Price']
+y = data['Discount_Price']
 
 
 X.fillna(X.mean(), inplace=True)
@@ -24,3 +24,4 @@ model.fit(X_train, y_train)
 
 
 joblib.dump(model, 'best_fit_model.pkl')
+
