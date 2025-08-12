@@ -6,7 +6,7 @@ import pandas as pd
 model = joblib.load('best_fit_model.pkl')
 
 # Features for prediction
-features = ['Brand', 'MRP', 'RAM', 'ROM', 'Display_Size', 'Battery', 'Front_Cam(MP)', 'Back_Cam(MP)']
+features = ['Brand', 'Brand_Model', 'RAM', 'ROM', 'Display_Size', 'Battery', 'Front_Cam(MP)', 'Back_Cam(MP)']
 
 # Sidebar Navigation
 st.sidebar.title("📌 Navigation")
@@ -63,4 +63,5 @@ elif page == "📊 Prediction":
             st.write(f"Intercept: {model.intercept_:.2f}")
         else:
             st.warning("This model does not have coefficients (e.g., tree-based models).")
+
 
