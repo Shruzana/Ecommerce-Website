@@ -31,10 +31,15 @@ if page == "🏠 Home":
     This app helps you **predict the discount price** of smartphones
     based on their brand, RAM, storage, display size, battery, and camera details.
 
-    **💡 Why use this app?**
-    - Helps e-commerce sellers plan competitive discounts.
-    - Assists customers in estimating the best deal.
-    - Useful for data analysis & price trend insights.
+**💡 Why use this app?**
+- 📊 Helps **e-commerce sellers** plan competitive discounts to attract more customers.
+- 🛒 Assists **buyers** in estimating the best deal before making a purchase.
+- 📈 Useful for **market analysis** and tracking **price trends** over time.
+- 🧠 Supports **data-driven decision making** for better pricing strategies.
+- ⏳ Saves **time** by predicting prices instantly without manual calculations.
+- 🎯 Helps target **specific customer segments** with personalized discounts.
+- 📦 Useful for **inventory clearance planning** by setting optimal discount rates.
+- 🔍 Provides **insights into brand-wise pricing patterns** in the market.
 
     Navigate to the **Prediction** tab from the sidebar to try it yourself!
     """)
@@ -111,3 +116,4 @@ elif page == "📊 Prediction":
         # Prediction
         prediction = model.predict(df)[0]
         st.success(f"💰 Predicted Discount Price: ₹{prediction:,.2f}")
+
