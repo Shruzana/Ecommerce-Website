@@ -5,7 +5,7 @@ import pandas as pd
 # Load the trained model
 model = joblib.load("best_fit_model.pkl")
 
-# Expected features (as per your trained model)
+# Features your model was trained on
 features = ['Brand', 'RAM', 'ROM', 'Display_Size', 'Battery', 'Front_Cam(MP)', 'Back_Cam(MP)']
 
 # Sidebar Navigation
@@ -16,11 +16,11 @@ page = st.sidebar.radio("Go to", ["🏠 Home", "ℹ️ Overview", "📊 Predicti
 # HOME PAGE
 # ========================
 if page == "🏠 Home":
+    st.markdown(
+        "<h1 style='color: #4CAF50; text-align: center;'>📱 Products Discount Data Analysis & Estimation</h1>",
+        unsafe_allow_html=True
+    )
 
-st.markdown(
-    "<h1 style='color: #4CAF50; text-align: center;'>📱 Products Discount Data Analysis & Estimation</h1>",
-    unsafe_allow_html=True
-)
     st.image(
         "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSTfyBEp1ZKKov4PnnRkdkeXIVtsB6nf9H-6g&s",
         use_container_width=True
@@ -97,24 +97,17 @@ elif page == "📊 Prediction":
     if st.button("🚀 Predict Discount Price"):
         df = pd.DataFrame([input_features])
 
-        # Encoding Brand if required
-        if 'Brand' in features:
-            df = pd.get_dummies(df, columns=['Brand'])
-            for col in [c for c in features if c.startswith('Brand_')]:
-                if col not in df:
-                    df[col] = 0
+        # One-hot encode Brand
+        df = pd.get_dummies(df, columns=['Brand'])
 
-        # Reorder columns to match training features
+        # Ensure all Brand columns from training exist
+        for col in [c for c in features if c.startswith('Brand_')]:
+            if col not in df.columns:
+                df[col] = 0
+
+        # Ensure column order matches training
         df = df.reindex(columns=features, fill_value=0)
 
         # Prediction
         prediction = model.predict(df)[0]
         st.success(f"💰 Predicted Discount Price: ₹{prediction:,.2f}")
-
-
-
-
-
-
-
-
