@@ -18,7 +18,7 @@ page = st.sidebar.radio("Go to", ["🏠 Home", "ℹ️ Overview", "📊 Predicti
 if page == "🏠 Home":
     st.title("📱 Products Discount Data Analysis & Estimation")
     st.image(
-        "https://cdn.pixabay.com/photo/2021/01/08/09/24/smartphone-5899905_1280.jpg",
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSTfyBEp1ZKKov4PnnRkdkeXIVtsB6nf9H-6g&s",
         use_container_width=True
     )
 
@@ -106,6 +106,7 @@ elif page == "📊 Prediction":
         # Prediction
         prediction = model.predict(df)[0]
         st.success(f"💰 Predicted Discount Price: ₹{prediction:,.2f}")
+
 
 
 
