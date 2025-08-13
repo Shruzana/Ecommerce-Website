@@ -16,14 +16,14 @@ page = st.sidebar.radio("Go to", ["🏠 Home", "ℹ️ Overview", "📊 Predicti
 # HOME PAGE
 # ========================
 if page == "🏠 Home":
-    st.title("📱 E-Commerce Smartphone Discount Predictor")
+    st.title("📱 Products Discount Data Analysis & Estimation")
     st.image(
         "https://cdn.pixabay.com/photo/2021/01/08/09/24/smartphone-5899905_1280.jpg",
         use_container_width=True
     )
 
     st.markdown("""
-    ## Welcome to the Smartphone Discount Prediction App 📊
+    ## Welcome to the Smartphone Discount Prediction
     This app helps you **predict the discount price** of smartphones
     based on their brand, RAM, storage, display size, battery, and camera details.
 
@@ -106,5 +106,6 @@ elif page == "📊 Prediction":
         # Prediction
         prediction = model.predict(df)[0]
         st.success(f"💰 Predicted Discount Price: ₹{prediction:,.2f}")
+
 
 
