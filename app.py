@@ -16,15 +16,11 @@ page = st.sidebar.radio("Go to", ["🏠 Home", "ℹ️ Overview", "📊 Predicti
 # HOME PAGE
 # ========================
 if page == "🏠 Home":
-st.markdown("""
-<h1 style="
-    background: -webkit-linear-gradient(#ff416c, #ff4b2b);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    text-align: center;">
-    📱 Products Discount Data Analysis & Estimation
-</h1>
-""", unsafe_allow_html=True)
+
+st.markdown(
+    "<h1 style='color: #4CAF50; text-align: center;'>📱 Products Discount Data Analysis & Estimation</h1>",
+    unsafe_allow_html=True
+)
     st.image(
         "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSTfyBEp1ZKKov4PnnRkdkeXIVtsB6nf9H-6g&s",
         use_container_width=True
@@ -114,6 +110,7 @@ elif page == "📊 Prediction":
         # Prediction
         prediction = model.predict(df)[0]
         st.success(f"💰 Predicted Discount Price: ₹{prediction:,.2f}")
+
 
 
 
